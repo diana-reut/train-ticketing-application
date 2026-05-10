@@ -1,11 +1,12 @@
 package com.ticketing.application.dto;
 
-import java.util.List;
 import java.time.LocalDateTime;
 
-public record SearchResponseDTO(
-        List<SearchSegmentDTO> segments,
-        int numberOfChanges,
+public record SearchSegmentDTO(
+        Long scheduleId,
+        String trainName,
+        String fromStation,
+        String toStation,
         LocalDateTime departureTime,
         LocalDateTime arrivalTime
 ) {

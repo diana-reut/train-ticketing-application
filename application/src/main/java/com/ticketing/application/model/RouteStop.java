@@ -24,4 +24,6 @@ public class RouteStop {
     private Station station;
 
     private int stopOrder;
+
+    private int minutesFromDeparture;
 }

@@ -15,6 +15,8 @@ public interface TrainScheduleRepository extends JpaRepository<TrainSchedule, Lo
 
     List<TrainSchedule> findByDepartureTimeAfter(LocalDateTime time);
 
+    List<TrainSchedule> findByDepartureTimeAfterOrderByDepartureTimeAsc(LocalDateTime time);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select ts from TrainSchedule ts where ts.id = :id")
     Optional<TrainSchedule> findByIdForUpdate(@Param("id") Long id);

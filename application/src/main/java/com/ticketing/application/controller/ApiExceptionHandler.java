@@ -1,6 +1,7 @@
 package com.ticketing.application.controller;
 
 import com.ticketing.application.exception.BookingConflictException;
+import com.ticketing.application.exception.NoConnectionFoundException;
 import com.ticketing.application.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -22,6 +23,13 @@ public class ApiExceptionHandler {
     public ProblemDetail handleConflict(BookingConflictException exception) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exception.getMessage());
         problemDetail.setTitle("Booking conflict");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(NoConnectionFoundException.class)
+    public ProblemDetail handleNoConnection(NoConnectionFoundException exception) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
+        problemDetail.setTitle("No connection found");
         return problemDetail;
     }
 
