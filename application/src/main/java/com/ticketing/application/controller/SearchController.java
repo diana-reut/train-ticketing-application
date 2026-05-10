@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -22,8 +23,9 @@ public class SearchController {
     @GetMapping
     public List<SearchResponseDTO> searchConnections(
             @RequestParam String fromStation,
-            @RequestParam String toStation
+            @RequestParam String toStation,
+            @RequestParam LocalDate departureDate
     ) {
-        return searchService.searchConnections(fromStation, toStation);
+        return searchService.searchConnections(fromStation, toStation, departureDate);
     }
 }

@@ -11,6 +11,7 @@ import com.ticketing.application.repository.StationRepository;
 import com.ticketing.application.repository.TrainScheduleRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -41,7 +42,7 @@ public class SearchService {
         this.stationRepository = stationRepository;
     }
 
-    public List<SearchResponseDTO> searchConnections(String fromStation, String toStation) {
+    public List<SearchResponseDTO> searchConnections(String fromStation, String toStation, LocalDate departureDate) {
         String normalizedFrom = requireStation(fromStation);
         String normalizedTo = requireStation(toStation);
 
@@ -49,8 +50,10 @@ public class SearchService {
             throw new NoConnectionFoundException("Departure and arrival stations must be different");
         }
 
+        LocalDateTime dayStart = departureDate.atStartOfDay();
+        LocalDateTime dayEnd = departureDate.plusDays(1).atStartOfDay().minusNanos(1);
         List<TrainSchedule> schedules = trainScheduleRepository
-                .findByDepartureTimeAfterOrderByDepartureTimeAsc(LocalDateTime.now());
+                .findByDepartureTimeBetweenOrderByDepartureTimeAsc(dayStart, dayEnd);
 
         List<LegCandidate> allLegs = schedules.stream()
                 .flatMap(this::buildLegCandidates)
@@ -76,7 +79,7 @@ public class SearchService {
 
         if (results.isEmpty()) {
             throw new NoConnectionFoundException(
-                    "No connection found from %s to %s".formatted(normalizedFrom, normalizedTo)
+                    "No connection found from %s to %s on %s".formatted(normalizedFrom, normalizedTo, departureDate)
             );
         }
 

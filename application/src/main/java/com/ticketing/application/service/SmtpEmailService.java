@@ -6,6 +6,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SmtpEmailService implements EmailService {
 
@@ -42,6 +44,39 @@ public class SmtpEmailService implements EmailService {
                         booking.getNumberOfTickets()
                 ));
 
+        mailSender.send(message);
+    }
+
+    @Override
+    public void sendItineraryBookingConfirmation(String customerEmail, List<Booking> bookings) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromAddress);
+        message.setTo(customerEmail);
+        message.setSubject("Train ticket booking confirmation");
+
+        StringBuilder body = new StringBuilder("""
+                Your booking has been confirmed.
+                Thank you for booking with us!
+
+                """);
+
+        for (Booking booking : bookings) {
+            body.append("""
+                    Booking ID: %d
+                    Train: %s
+                    Departure: %s
+                    Tickets: %d
+
+                    """
+                    .formatted(
+                            booking.getId(),
+                            booking.getSchedule().getTrain().getName(),
+                            booking.getSchedule().getDepartureTime(),
+                            booking.getNumberOfTickets()
+                    ));
+        }
+
+        message.setText(body.toString());
         mailSender.send(message);
     }
 }

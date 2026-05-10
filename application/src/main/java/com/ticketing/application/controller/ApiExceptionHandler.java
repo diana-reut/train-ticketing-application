@@ -3,6 +3,7 @@ package com.ticketing.application.controller;
 import com.ticketing.application.exception.BookingConflictException;
 import com.ticketing.application.exception.NoConnectionFoundException;
 import com.ticketing.application.exception.ResourceNotFoundException;
+import org.springframework.mail.MailException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -37,6 +38,28 @@ public class ApiExceptionHandler {
     public ProblemDetail handleValidation(MethodArgumentNotValidException exception) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Booking request is invalid");
         problemDetail.setTitle("Validation failed");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(MailException.class)
+    public ProblemDetail handleMailFailure(MailException exception) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatus.SERVICE_UNAVAILABLE,
+                "Booking could not be completed because the confirmation email could not be sent. Start your SMTP test server on localhost:1025 and try again."
+        );
+        problemDetail.setTitle("Email delivery failed");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleUnexpectedFailure(Exception exception) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                exception.getMessage() == null || exception.getMessage().isBlank()
+                        ? "An unexpected error occurred while processing the request."
+                        : exception.getMessage()
+        );
+        problemDetail.setTitle("Unexpected server error");
         return problemDetail;
     }
 }

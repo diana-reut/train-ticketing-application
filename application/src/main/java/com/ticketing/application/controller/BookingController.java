@@ -2,6 +2,8 @@ package com.ticketing.application.controller;
 
 import com.ticketing.application.dto.BookingRequestDTO;
 import com.ticketing.application.dto.BookingResponseDTO;
+import com.ticketing.application.dto.ItineraryBookingRequestDTO;
+import com.ticketing.application.dto.ItineraryBookingResponseDTO;
 import com.ticketing.application.service.BookingService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -25,5 +27,11 @@ public class BookingController {
     @ResponseStatus(HttpStatus.CREATED)
     public BookingResponseDTO createBooking(@Valid @RequestBody BookingRequestDTO request) {
         return bookingService.createBooking(request);
+    }
+
+    @PostMapping("/itinerary")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ItineraryBookingResponseDTO createItineraryBooking(@Valid @RequestBody ItineraryBookingRequestDTO request) {
+        return bookingService.createItineraryBooking(request);
     }
 }

@@ -2,6 +2,8 @@ package com.ticketing.application.service;
 
 import com.ticketing.application.dto.BookingRequestDTO;
 import com.ticketing.application.dto.BookingResponseDTO;
+import com.ticketing.application.dto.ItineraryBookingRequestDTO;
+import com.ticketing.application.dto.ItineraryBookingResponseDTO;
 import com.ticketing.application.exception.BookingConflictException;
 import com.ticketing.application.exception.ResourceNotFoundException;
 import com.ticketing.application.model.Booking;
@@ -12,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 @Service
 public class BookingService {
@@ -32,29 +37,60 @@ public class BookingService {
 
     @Transactional
     public BookingResponseDTO createBooking(BookingRequestDTO request) {
-        TrainSchedule schedule = trainScheduleRepository.findByIdForUpdate(request.scheduleId())
+        Booking booking = createBookingRecord(request.scheduleId(), request.customerEmail(), request.numberOfTickets());
+
+        emailService.sendBookingConfirmation(booking);
+
+        return toResponse(booking);
+    }
+
+    @Transactional
+    public ItineraryBookingResponseDTO createItineraryBooking(ItineraryBookingRequestDTO request) {
+        List<Long> distinctScheduleIds = request.scheduleIds().stream()
+                .collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new))
+                .stream()
+                .toList();
+        List<Booking> bookings = new ArrayList<>();
+
+        for (Long scheduleId : distinctScheduleIds) {
+            bookings.add(createBookingRecord(scheduleId, request.customerEmail(), request.numberOfTickets()));
+        }
+
+        emailService.sendItineraryBookingConfirmation(request.customerEmail(), bookings);
+
+        return new ItineraryBookingResponseDTO(
+                request.customerEmail(),
+                request.numberOfTickets(),
+                bookings.size(),
+                bookings.stream().map(this::toResponse).toList()
+        );
+    }
+
+    private Booking createBookingRecord(Long scheduleId, String customerEmail, int numberOfTickets) {
+        TrainSchedule schedule = trainScheduleRepository.findByIdForUpdate(scheduleId)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Train schedule %d was not found".formatted(request.scheduleId())
+                        "Train schedule %d was not found".formatted(scheduleId)
                 ));
 
         int alreadyBookedTickets = bookingRepository.countBookedSeats(schedule);
         int remainingSeats = schedule.getTrain().getCapacity() - alreadyBookedTickets;
 
-        if (request.numberOfTickets() > remainingSeats) {
+        if (numberOfTickets > remainingSeats) {
             throw new BookingConflictException(
                     "Only %d seats are still available for this train".formatted(Math.max(remainingSeats, 0))
             );
         }
 
-        Booking booking = bookingRepository.save(Booking.builder()
-                .customerEmail(request.customerEmail())
+        return bookingRepository.save(Booking.builder()
+                .customerEmail(customerEmail)
                 .schedule(schedule)
-                .numberOfTickets(request.numberOfTickets())
+                .numberOfTickets(numberOfTickets)
                 .bookingTime(LocalDateTime.now())
                 .build());
+    }
 
-        emailService.sendBookingConfirmation(booking);
-
+    private BookingResponseDTO toResponse(Booking booking) {
+        TrainSchedule schedule = booking.getSchedule();
         return new BookingResponseDTO(
                 booking.getId(),
                 booking.getCustomerEmail(),
