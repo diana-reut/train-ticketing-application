@@ -3,6 +3,7 @@ package com.ticketing.application.repository;
 import com.ticketing.application.model.Booking;
 import com.ticketing.application.model.TrainSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.Query;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
@@ -12,5 +13,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             FROM Booking b
             WHERE b.schedule = :schedule
             """)
-    int countBookedSeats(TrainSchedule schedule);
+    int countBookedSeats(@Param("schedule") TrainSchedule schedule);
 }
