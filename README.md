@@ -91,7 +91,7 @@ Mail inbox:
 
 This allows using fake emails like `test@example.com`.
 
-Then I run the main application.
+Then I run the main application (Application.java).
 The default app URL is:
 - [http://localhost:8080](http://localhost:8080)
 
@@ -1093,3 +1093,8 @@ There are automated tests for:
 
 - The seeded schedules are for `2026-05-25`, so when testing the application you should usually pick that date.
 - For testing how the application works, MailHog is recommended instead of real email accounts.
+
+
+# Extra problem:
+
+I added a simple Sudoku solver in the file `SudokuSolverProgram.java`.
