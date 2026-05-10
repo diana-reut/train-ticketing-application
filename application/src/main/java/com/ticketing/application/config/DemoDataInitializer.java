@@ -14,10 +14,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Configuration
 public class DemoDataInitializer {
+
+    private static final LocalDate DEMO_SERVICE_DATE = LocalDate.of(2026, 5, 25);
 
     @Bean
     CommandLineRunner seedDemoData(
@@ -32,12 +35,7 @@ public class DemoDataInitializer {
                 return;
             }
 
-            LocalDateTime baseDepartureDay = LocalDateTime.now()
-                    .plusDays(1)
-                    .withHour(0)
-                    .withMinute(0)
-                    .withSecond(0)
-                    .withNano(0);
+            LocalDateTime baseDepartureDay = DEMO_SERVICE_DATE.atStartOfDay();
 
             Train train = trainRepository.save(Train.builder()
                     .name("IR 1581")

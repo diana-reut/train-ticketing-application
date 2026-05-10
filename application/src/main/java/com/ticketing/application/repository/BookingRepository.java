@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("""
@@ -14,4 +16,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             WHERE b.schedule = :schedule
             """)
     int countBookedSeats(@Param("schedule") TrainSchedule schedule);
+
+    List<Booking> findByScheduleTrainIdOrderByBookingTimeDesc(Long trainId);
+
+    List<Booking> findByScheduleIdOrderByBookingTimeAsc(Long scheduleId);
 }

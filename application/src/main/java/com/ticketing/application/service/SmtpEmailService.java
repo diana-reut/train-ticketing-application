@@ -1,6 +1,7 @@
 package com.ticketing.application.service;
 
 import com.ticketing.application.model.Booking;
+import com.ticketing.application.model.TrainSchedule;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -77,6 +78,30 @@ public class SmtpEmailService implements EmailService {
         }
 
         message.setText(body.toString());
+        mailSender.send(message);
+    }
+
+    @Override
+    public void sendDelayNotification(String customerEmail, TrainSchedule schedule) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromAddress);
+        message.setTo(customerEmail);
+        message.setSubject("Train delay notification");
+        message.setText("""
+                Your train has encountered a delay.
+
+                Train: %s
+                Scheduled departure: %s
+                Delay: %d minutes
+                Updated departure: %s
+                """
+                .formatted(
+                        schedule.getTrain().getName(),
+                        schedule.getDepartureTime(),
+                        schedule.getDelayMinutes(),
+                        schedule.getDepartureTime().plusMinutes(schedule.getDelayMinutes())
+                ));
+
         mailSender.send(message);
     }
 }
