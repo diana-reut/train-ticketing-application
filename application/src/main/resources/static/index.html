@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Ticket Booking</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="page">
+    <section class="hero">
+        <h1>Search for a route.</h1>
+        <p class="subtitle">Pick a departure station, an arrival station, your email, and ticket count. We will show direct routes or journeys with changes.</p>
+    </section>
+
+    <section class="panel">
+        <form id="search-form" class="search-form">
+            <label>
+                From station
+                <div class="station-picker" data-station-picker>
+                    <input id="from-station" name="fromStation" autocomplete="off" required placeholder="Bucharest North">
+                    <div id="from-station-options" class="station-options" data-options-for="from-station"></div>
+                </div>
+            </label>
+
+            <label>
+                To station
+                <div class="station-picker" data-station-picker>
+                    <input id="to-station" name="toStation" autocomplete="off" required placeholder="Oradea">
+                    <div id="to-station-options" class="station-options" data-options-for="to-station"></div>
+                </div>
+            </label>
+
+            <label>
+                Departure date
+                <input id="departure-date" name="departureDate" type="date" required>
+            </label>
+
+            <label>
+                Email
+                <input id="customer-email" name="customerEmail" type="email" placeholder="client@example.com">
+            </label>
+
+            <label>
+                Tickets
+                <input id="ticket-count" name="numberOfTickets" type="number" min="1" value="1" required>
+            </label>
+
+            <button type="submit">Search routes</button>
+        </form>
+        <p id="status-message" class="status" aria-live="polite"></p>
+    </section>
+
+    <section class="results-shell">
+        <div class="results-header">
+            <h2>Available routes</h2>
+            <p id="results-summary">Choose one option and book for all the included trains.</p>
+        </div>
+        <div id="results" class="results"></div>
+    </section>
+</main>
+
+<div id="success-modal" class="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <h2 id="modal-title">Booking confirmed</h2>
+        <p id="modal-message"></p>
+        <button id="modal-close-button" type="button">OK</button>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

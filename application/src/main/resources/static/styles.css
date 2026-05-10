@@ -1,0 +1,179 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    color: #222;
+}
+
+.page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+.hero,
+.panel,
+.results-shell,
+.itinerary-card,
+.modal-card {
+    margin-bottom: 16px;
+}
+
+.panel,
+.results-shell,
+.itinerary-card,
+.modal-card,
+.station-options {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.panel,
+.results-shell,
+.itinerary-card,
+.modal-card {
+    padding: 16px;
+}
+
+.search-form {
+    display: grid;
+    gap: 12px;
+}
+
+.search-form label {
+    display: grid;
+    gap: 4px;
+}
+
+.search-form input,
+.search-form button,
+.book-button,
+.modal-card button {
+    padding: 10px;
+    font: inherit;
+    border-radius: 4px;
+}
+
+.search-form input {
+    border: 1px solid #ddd;
+}
+
+.search-form button,
+.book-button,
+.modal-card button {
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    cursor: pointer;
+}
+
+.station-picker {
+    position: relative;
+}
+
+.station-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.station-options.open {
+    display: block;
+}
+
+.station-option,
+.station-option-empty {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #fff;
+    text-align: left;
+    font: inherit;
+}
+
+.station-option:hover,
+.station-option.active {
+    background: #f0f0f0;
+}
+
+.status,
+.subtitle,
+.results-header p,
+.segment-times,
+.modal-card p,
+.station-option-empty,
+.empty-state {
+    color: #666;
+}
+
+.status.success {
+    color: green;
+}
+
+.status.error {
+    color: red;
+}
+
+.results {
+    display: grid;
+    gap: 12px;
+}
+
+.segments {
+    display: grid;
+    gap: 8px;
+}
+
+.segment {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.segment-top,
+.itinerary-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.tag {
+    font-size: 12px;
+    color: #2563eb;
+}
+
+.card-actions {
+    margin-top: 12px;
+    text-align: right;
+}
+
+.modal[hidden] {
+    display: none;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.modal-card {
+    width: 100%;
+    max-width: 400px;
+}
+
+@media (max-width: 640px) {
+    .segment-top,
+    .itinerary-meta {
+        flex-direction: column;
+    }
+}
