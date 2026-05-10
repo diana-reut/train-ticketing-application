@@ -236,6 +236,9 @@ Successful output:
 }
 ```
 
+Example of email when booking for a trip from Bucharest North to Oradea with 3 train changes:
+![img_2.png](img_2.png)
+
 ## B) Find possible departure and arrival times between two stations
 
 ### Functionality
@@ -1035,6 +1038,7 @@ Effect:
 
 - the schedule delay is saved
 - all customers who booked that schedule receive a delay notification email
+![img_1.png](img_1.png)
 
 ## Helper Endpoint
 
@@ -1087,5 +1091,5 @@ There are automated tests for:
 
 ## Notes
 
-- The seeded schedules are for `2026-05-25`, so when testing the UI search you should usually pick that date.
+- The seeded schedules are for `2026-05-25`, so when testing the application you should usually pick that date.
 - For testing how the application works, MailHog is recommended instead of real email accounts.
